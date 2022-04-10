@@ -87,3 +87,110 @@ function cleanData(data) {
     }
     return data;
 } 
+
+
+//create legendWrapper
+const legendWrapper = d3
+    .select("body")
+    .append("div")
+    .style("display", "flex")
+    .style("flex-direction", "column")
+    .style("align-items", "center")
+    .style("class", "map");
+legendWrapper.append("h2").text("espèrence de vie ");
+const legend = legendWrapper
+    .append("div")
+    .attr("class", "legend")
+    .style("display", "flex")
+    .style("flex-direction", "row");
+
+    //set data for legend
+    const legendData = new Map();
+    data.forEach(function(d) {
+        if (legendData.has(d.country)) {
+            legendData.set(d.country, legendData.get(d.country) + 1);
+
+
+    //create svg
+    const width2 = 800;
+    const height2 = 800;
+    const svgMap = legendWrapper
+        .append("svg")
+        .attr("width", width2)
+        .attr("height", height2);
+
+    //create projection
+    const projection = d3
+        .geoNaturalEarth1()
+        .scale(width2 / 1.3 / Math.PI-50)
+        .translate([width2 / 2, height2 / 2]);
+
+    
+        //color interval
+        const intervalCount = 9;
+        const domainInterval = yMax / intervalCount;
+        const intervals = [];
+        for (let i = 0; i < intervalCount; i++) {
+            if (i === 0) {
+            intervals.push(i * domainInterval);
+        }
+
+
+    //color scale
+    const color = d3
+    .scaleThreshold()
+    .domain([...intervals])
+    .range(d3.schemeBlues[intervalsCount]);
+
+
+
+//Load data and boot
+d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson"
+).then(function(data) {
+    //draw map
+    svgMap
+        .append("g")
+        .selectAll("path")
+        .data(data.features)
+        .join("path")
+        .attr("fill", function(d) {
+            return colorScale(countries.get(d.properties.name));
+        })
+        .attr("d", d3.geoPath().projection(projection));
+        .style("stroke", "black")
+    });
+
+    //draw legend
+    let i = 0;
+    intervals.forEach((d) => {
+        legend
+            .append("div")
+            .append("text")
+            .attr("class", "legend-item")
+            .style("background-color", colorScale(d))
+            .style("width", "50px")
+            .style("height", "30px")
+            .style("display", "flex")
+            .style("justify-content", "center")
+            .style("align-items", "center")
+            .style("font-size", "12px");
+            .style("color", "blue");
+            .text(intervals[i].tofixed(2));
+            i++;
+    });
+        legend
+            .append("div")
+            .style("width", "50px")
+            .style("background-color", "black")
+            .style("height", "30px")
+            .style("display", "flex")
+            .style("justify-content", "center")
+            .style("align-items", "center")
+            .append("text")
+            .text("no data")
+            .style("color", "blue");
+    }
+
+
+        
+
