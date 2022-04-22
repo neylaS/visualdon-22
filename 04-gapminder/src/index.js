@@ -1,3 +1,4 @@
+//import data
 import * as d3 from "d3";
 
 import income from "../data/income_per_person_gdppercapita_ppp_inflation_adjusted.csv";
